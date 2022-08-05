@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Структура заказа
 type Order struct {
 	gorm.Model
 	OrderUID          string    `json:"order_uid" gorm:"uniqueIndex"`

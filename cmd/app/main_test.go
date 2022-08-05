@@ -13,6 +13,7 @@ import (
 
 const dsn_test = "host=localhost user=test password=12345 dbname=l0-test port=5433 sslmode=disable TimeZone=Europe/Moscow"
 
+// Тестируем http
 func Test_http(t *testing.T) {
 	want := 200
 	req := httptest.NewRequest("GET", "http://localhost", nil)
@@ -25,6 +26,7 @@ func Test_http(t *testing.T) {
 	}
 }
 
+// Тестируем на ненайденный заказ
 func Test_orderNotFound(t *testing.T) {
 	want := 404
 	wantMsg := "Уточните номер заказа..."
@@ -43,6 +45,7 @@ func Test_orderNotFound(t *testing.T) {
 	}
 }
 
+// Тестируем подключение, запись БД.
 func TestDb(t *testing.T) {
 	database.InitDb(dsn_test)
 	newOrder := generator.GenerateOrder()

@@ -14,6 +14,7 @@ import (
 var Nc *nats.Conn
 var Js nats.JetStreamContext
 
+// Соединение с jetstream
 func NatsJsConnect() {
 	var err error
 	natsHost := os.Getenv("NATS_HOST")
