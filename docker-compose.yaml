@@ -1,33 +1,62 @@
 services:
   postgres:
     image: postgres:14.4-alpine
-    container_name: learning-postgres
+    container_name: l0-postgres
     environment:
       POSTGRES_PASSWORD: "12345"
       POSTGRES_USER:  "student"
-      POSTGRES_DB:  "learning"
+      POSTGRES_DB:  "l0"
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
     networks:
-      - learning
+      - l0
 
-  nats1:
+  postgres-test:
+    image: postgres:14.4-alpine
+    container_name: test-postgres
+    environment:
+      POSTGRES_PASSWORD: "12345"
+      POSTGRES_USER: "test"
+      POSTGRES_DB: "l0-test"
+    volumes:
+      - postgres-test:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    networks:
+      - l0
+
+  nats:
     image: nats:2.8-alpine
-    container_name: learning-nats1
+    container_name: l0-nats
     command: -js -sd /data
     volumes:
-      - nats1:/data
+      - nats:/data
     ports:
       - 4222:4222
     networks:
-      - learning
+      - l0
 
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    networks:
+      - l0
+    environment:
+      DB_HOST: "l0-postgres"
+      NATS_HOST: "l0-nats"
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+      - nats
 
 networks:
-  learning:
+  l0:
 
 volumes:
   postgres:
-  nats1:
+  nats:
+  postgres-test:
